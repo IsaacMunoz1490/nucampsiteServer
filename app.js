@@ -5,6 +5,8 @@ var path = require('path');
 var logger = require('morgan');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
+const passport = require('passport');
+const authenticate = require('./authenticate');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -35,6 +37,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
 // app.use(cookieParser('1234-5674-9089-0000'));
 
 app.use(session({
@@ -44,26 +47,26 @@ app.use(session({
   resave: false,
   store: new FileStore()
 }));
-// Unauthenticated users can use the access
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+
 // Basic authentication for a website
 function auth(req, res, next) {
-  console.log(req.session);
-  if (!req.session.user) {
-    const err = new Error('You are not authenticated!');
-    err.status = 401;
-    return next(err);
-  } else {
-    if (req.session.user === 'authenticated') {
-      return next();
+  console.log(req.user);
+
+  if (!req.user) {
+        const err = new Error('You are not authenticated!');
+        err.status = 401;
+        return next(err);
     } else {
-      const err = new Error('You are not authenticated!');
-      err.status = 401;
-      return next(err);
+        return next();
     }
   }
-}
 app.use(auth);
 
 
