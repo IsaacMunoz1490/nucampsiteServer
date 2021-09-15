@@ -5,12 +5,13 @@ var logger = require('morgan');
 const passport = require('passport');
 const config = require('./config');
 
-
+// Calling Require routes
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const campsiteRouter = require('./routes/campsiteRouter');
 const promotionRouter = require('./routes/promotionRouter');
 const partnerRouter = require('./routes/partnerRouter');
+const uploadRouter = require('./routes/uploadRouter');
 
 const mongoose = require('mongoose');
 
@@ -54,10 +55,11 @@ app.use('/users', usersRouter);
 // This is where we will add the authentication, if you want for people to aces your contect you can place authentiction below the static path "public".
 app.use(express.static(path.join(__dirname, 'public')));
 
-// adding our Routers
+// adding our Routers/Models
 app.use('/campsites', campsiteRouter);
 app.use('/promotions', promotionRouter);
 app.use('/partners', partnerRouter);
+app.use('/imageUpload', uploadRouter);
 
 // catch 404 and forward to erro`r handler
 app.use(function (req, res, next) {
