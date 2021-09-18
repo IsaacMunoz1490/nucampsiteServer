@@ -1,13 +1,13 @@
 const express = require('express');
 const Campsite = require('../models/campsite');
 const authenticate = require('../authenticate');
-const cors = require('./cors');
+const cors = require('./cors'); //enabling cors 
 
 
 const campsiteRouter = express.Router();
 
 campsiteRouter.route('/')
-.options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
+.options(cors.corsWithOptions, (req, res) => res.sendStatus(200)) 
     .get(cors.cors, (req, res, next) => {
         Campsite.find()
             .populate('comments.author')
